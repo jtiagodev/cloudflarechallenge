@@ -1,4 +1,4 @@
-name = "covidtracker"
+name = "sensorscheck"
 type = "webpack"
 account_id = "3b3177c1d3ba6336de8f418d4533ae68"
 workers_dev = true

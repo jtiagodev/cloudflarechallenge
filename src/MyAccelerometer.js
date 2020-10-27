@@ -18,7 +18,7 @@ const Accel = (props) => {
   const [accelData, setAccelData] = useState([]);
   const [accel, setAccel] = useState(new window.Accelerometer({
     referenceFrame: "device",
-    frequency: 5,
+    frequency: 1,
   }));
   
   useEffect(() => {
@@ -38,12 +38,16 @@ const Accel = (props) => {
     };
   
     const accelReadingHandler = () => {
-      setAccelData(prevData => prevData.concat([{
+      setAccelData(prevData => {
+        // Caps data at 20 entries
+        const newData = prevData.slice(0, 19);
+        return newData.concat([{
         time: new Date().getTime(),
         x: accel.x,
         y: accel.y,
         z: accel.z,
-      }]));
+      }]);
+    });
       setAccelerometer({ x: accel.x, y: accel.y, z: accel.z });
     };
 
@@ -77,7 +81,7 @@ const Accel = (props) => {
     <Flex column>
       <span>Accelerometer</span>
       <span>
-        {`Readings (total: ${accelData.length}): ${accelerometer.x.toFixed(
+        {`Readings: ${accelerometer.x.toFixed(
           1
         )} ${accelerometer.y.toFixed(1)} ${accelerometer.z.toFixed(1)}`}
       </span>
@@ -93,15 +97,14 @@ const Accel = (props) => {
             dataKey="time"
             domain={["auto", "auto"]}
             name="Time"
-            tickFormatter={(unixTime) => moment(unixTime).format("HH:mm:ss.SSS")}
+            tickFormatter={(unixTime) => moment(unixTime).format("HH:mm:ss")}
             type="number"
           />
           <YAxis />
-          {/* <Tooltip /> */}
           <Legend />
-          <Line type="monotone" dataKey="x" stroke="red" />
-          <Line type="monotone" dataKey="y" stroke="green" />
-          <Line type="monotone" dataKey="z" stroke="blue" />
+          <Line dot={false} isAnimationActive={false} type="monotone" dataKey="x" stroke="red" />
+          <Line dot={false} isAnimationActive={false} type="monotone" dataKey="y" stroke="green" />
+          <Line dot={false} isAnimationActive={false} type="monotone" dataKey="z" stroke="blue" />
         </LineChart>
       ) : (
         <span>{`Status: ${sensor}`}</span>

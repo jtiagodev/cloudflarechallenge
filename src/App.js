@@ -1,20 +1,25 @@
 import React, { useState } from "react";
-import MyAccelerator from "./Accel";
+import MyAccelerometer from "./MyAccelerometer";
 import "./App.css";
-import COVID from "./COVID";
-import logo from "./logo.svg";
+import COVIDStats from "./COVIDStats";
+import MyAbsoluteOrientationSensor from "./MyAbsoluteOrientationSensor";
+import { Flex } from "./components/Grid";
 
 const App = (props) => {
   const [navigate, setNavigate] = useState("SENSORS");
 
   return (
-    <div className="App">
+    <div style={{ width: '80%' }} className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <button onClick={() => setNavigate("COVID")}>COVID</button>
-        <button onClick={() => setNavigate("SENSORS")}>SENSORS</button>
-        {navigate === "COVID" && <COVID />}
-        {navigate === "SENSORS" && <MyAccelerator />}
+        <button onClick={() => setNavigate("COVID")}>COVID Stats</button>
+        <button onClick={() => setNavigate("SENSORS")}>SENSORS Check</button>
+        {navigate === "COVID" && <COVIDStats />}
+        {navigate === "SENSORS" && (
+          <Flex column>
+            <MyAccelerometer />
+            <MyAbsoluteOrientationSensor />
+          </Flex>
+        )}
       </header>
     </div>
   );
