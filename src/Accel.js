@@ -16,9 +16,13 @@ const Accel = (props) => {
   const [sensor, setSensor] = useState("Starting");
   const [accelerometer, setAccelerometer] = useState({ x: 0, y: 0, z: 0 });
   const [accelData, setAccelData] = useState([]);
-
+  const [accel, setAccel] = useState(new window.Accelerometer({
+    referenceFrame: "device",
+    frequency: 5,
+  }));
+  
   useEffect(() => {
-    let accel = null;
+    
 
     const accelErrorHandler = (event) => {
       // Handle runtime errors.
@@ -33,26 +37,21 @@ const Accel = (props) => {
       }
     };
   
-    const accelReadingHandler = (evt) => {
-      const newData = [...accelData, {
+    const accelReadingHandler = () => {
+      setAccelData(prevData => prevData.concat([{
         time: new Date().getTime(),
         x: accel.x,
         y: accel.y,
         z: accel.z,
-      }];
-      setAccelData(newData);
+      }]));
       setAccelerometer({ x: accel.x, y: accel.y, z: accel.z });
     };
 
     try {
-      accel = new window.Accelerometer({
-        referenceFrame: "device",
-        frequency: 1,
-      });
       accel.addEventListener("error", accelErrorHandler);
       accel.addEventListener("reading", accelReadingHandler);
-      setSensor("Reading");
       accel.start();
+      setSensor("Reading");
     } catch (error) {
       // Handle construction errors.
       if (error.name === "SecurityError") {
@@ -94,7 +93,7 @@ const Accel = (props) => {
             dataKey="time"
             domain={["auto", "auto"]}
             name="Time"
-            tickFormatter={(unixTime) => moment(unixTime).format("HH:mm:ss")}
+            tickFormatter={(unixTime) => moment(unixTime).format("HH:mm:ss.SSS")}
             type="number"
           />
           <YAxis />
