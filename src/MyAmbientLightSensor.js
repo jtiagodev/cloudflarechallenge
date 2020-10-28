@@ -138,7 +138,7 @@ const MyAmbientLightSensor = (props) => {
   return (
     <Flex
       onClick={() =>
-        speak(`Ambient Light Sensor status: ${status}`)
+        speak(`Ambient Light status: ${status}`)
       }
       style={{
         boxShadow: "0px 0px 2px 0px #FFFFFF",

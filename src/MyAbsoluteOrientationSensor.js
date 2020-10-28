@@ -185,7 +185,7 @@ const MyAbsoluteOrientationSensor = (props) => {
   return (
     <Flex
       onClick={() =>
-        speak(`Absolute Orientation Sensor status: ${status}`)
+        speak(`Absolute Orientation status: ${status}`)
       }
       style={{
         boxShadow: "0px 0px 2px 0px #FFFFFF",

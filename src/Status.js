@@ -33,7 +33,7 @@ const Status = (props) => {
     labels: ['GOOD', 'BAD', 'UNKNOWN'],
     datasets: [
         {
-          label: 'System Status',
+          label: 'Sensors Status',
           data: statusData,
           backgroundColor: [
             'rgba(0, 255, 0, 0.3)',
@@ -50,10 +50,16 @@ const Status = (props) => {
       ],
   });
 
+  useEffect(() => {
+    setData(produce(data, (draft) => {
+      draft.datasets[0].data = statusData
+    }));
+  }, [statusData]);
+
   return (
     <Flex
       onClick={() =>
-        speak(`Current system status: ${statusData[0]} good, ${statusData[1]} bad`)
+        speak(`Sensors status: ${statusData[0]} ok, ${statusData[1]} not ok`)
       }
       style={{
         flex: 3,

@@ -170,7 +170,7 @@ const MyAccelerometer = (props) => {
 
   return (
     <Flex
-      onClick={() => speak(`Accelerometer current status: ${sensor}`)}
+      onClick={() => speak(`Accelerometer status: ${sensor}`)}
       style={{
         boxShadow: "0px 0px 2px 0px #FFFFFF",
         flex: 3,

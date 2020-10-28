@@ -27,7 +27,7 @@ const COVIDStats = (prop) => {
     <>
     {data.cases !== 0 && (
     <Flex column style={{ padding: "10px", width: '90vw' }}>
-      <span>{`[COVID-19 STATS] Total Infected: ${data.cases}`}</span>
+      <SmallText>{`[COVID-19 STATS] Total Infected: ${data.cases}`}</SmallText>
       <SmallText>source: NovelCOVID API</SmallText>
     </Flex>
     )}
