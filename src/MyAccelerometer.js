@@ -1,29 +1,95 @@
 import React, { useState, useEffect } from "react";
 import { Flex } from "./components/Grid";
+import Text from "./components/Text";
 import produce from "immer";
-import {
-  LineChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Line,
-} from "recharts";
-import moment from "moment";
+import { Line } from "react-chartjs-2";
 
-const Accel = (props) => {
+const minimalOptions = {
+  elements: {
+    point: {
+      radius: 0,
+    },
+  },
+  tooltips: {
+    enabled: false,
+  },
+  hover: { mode: null },
+  scales: {
+    xAxes: [
+      {
+        gridLines: {
+          display: false,
+        },
+        ticks: {
+          display: false,
+        },
+        type: "time",
+      },
+    ],
+    yAxes: [
+      {
+        ticks: {
+          min: -10,
+          max: 20,
+          stepSize: 1,
+        },
+      },
+    ],
+  },
+  legend: {
+    display: false,
+  },
+};
+
+const MyAccelerometer = (props) => {
   const [sensor, setSensor] = useState("Starting");
   const [accelerometer, setAccelerometer] = useState({ x: 0, y: 0, z: 0 });
-  const [accelData, setAccelData] = useState([]);
-  const [accel, setAccel] = useState(new window.Accelerometer({
-    referenceFrame: "device",
-    frequency: 1,
-  }));
-  
-  useEffect(() => {
-    
+  const [data, setData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "x",
+        backgroundColor: "rgba(0, 0, 0, 0.0)",
+        borderColor: "red",
+        borderWidth: 2,
+        pointRadius: 0,
+        lineTension: 0,
+        pointBackgroundColor: "white",
+        showLine: true,
+        data: [],
+      },
+      {
+        label: "y",
+        backgroundColor: "rgba(0, 0, 0, 0.0)",
+        borderColor: "green",
+        borderWidth: 2,
+        pointRadius: 0,
+        lineTension: 0,
+        pointBackgroundColor: "white",
+        showLine: true,
+        data: [],
+      },
+      {
+        label: "z",
+        backgroundColor: "rgba(0, 0, 0, 0.0)",
+        borderColor: "blue",
+        borderWidth: 2,
+        pointRadius: 0,
+        lineTension: 0,
+        pointBackgroundColor: "white",
+        showLine: true,
+        data: [],
+      },
+    ],
+  });
+  const [accel, setAccel] = useState(
+    new window.Accelerometer({
+      referenceFrame: "device",
+      frequency: 3,
+    })
+  );
 
+  useEffect(() => {
     const accelErrorHandler = (event) => {
       // Handle runtime errors.
       if (event.error.name === "NotAllowedError") {
@@ -36,18 +102,24 @@ const Accel = (props) => {
         setSensor("Sensor Generic Error");
       }
     };
-  
+
     const accelReadingHandler = () => {
-      setAccelData(prevData => {
-        // Caps data at 20 entries
-        const newData = prevData.slice(0, 19);
-        return newData.concat([{
-        time: new Date().getTime(),
-        x: accel.x,
-        y: accel.y,
-        z: accel.z,
-      }]);
-    });
+      setData(
+        produce(data, (draft) => {
+          const newDate = new Date();
+          draft.labels = draft.labels.concat([newDate]);
+          draft.datasets[0].data = draft.datasets[0].data.concat([
+            { t: newDate, y: accel.x },
+          ]);
+          draft.datasets[1].data = draft.datasets[1].data.concat([
+            { t: newDate, y: accel.y },
+          ]);
+          draft.datasets[2].data = draft.datasets[2].data.concat([
+            { t: newDate, y: accel.z },
+          ]);
+          return draft;
+        })
+      );
       setAccelerometer({ x: accel.x, y: accel.y, z: accel.z });
     };
 
@@ -78,39 +150,22 @@ const Accel = (props) => {
   }, []);
 
   return (
-    <Flex column>
-      <span>Accelerometer</span>
-      <span>
-        {`Readings: ${accelerometer.x.toFixed(
-          1
-        )} ${accelerometer.y.toFixed(1)} ${accelerometer.z.toFixed(1)}`}
-      </span>
+    <Flex>
+      <Flex column>
+        <Text>Accelerometer</Text>
+        {sensor === "Reading" && (<span>
+          {`Readings: ${accelerometer.x.toFixed(1)} ${accelerometer.y.toFixed(
+            1
+          )} ${accelerometer.z.toFixed(1)}`}
+        </span>)}
+      </Flex>
       {sensor === "Reading" ? (
-        <LineChart
-          width={730}
-          height={250}
-          data={accelData}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="time"
-            domain={["auto", "auto"]}
-            name="Time"
-            tickFormatter={(unixTime) => moment(unixTime).format("HH:mm:ss")}
-            type="number"
-          />
-          <YAxis />
-          <Legend />
-          <Line dot={false} isAnimationActive={false} type="monotone" dataKey="x" stroke="red" />
-          <Line dot={false} isAnimationActive={false} type="monotone" dataKey="y" stroke="green" />
-          <Line dot={false} isAnimationActive={false} type="monotone" dataKey="z" stroke="blue" />
-        </LineChart>
+        <Line data={data} options={minimalOptions} />
       ) : (
-        <span>{`Status: ${sensor}`}</span>
+        <span>{`ERROR: ${sensor}`}</span>
       )}
     </Flex>
   );
 };
 
-export default Accel;
+export default MyAccelerometer;
