@@ -1,29 +1,9 @@
 body {
   background-color: black;
-  /* background-image: radial-gradient(
-    rgba(0, 150, 0, 0.75), black 120%
-  ); */
   height: 100vh;
-  /* color: white; */
   color: #24CC44;
-  font: 1.3rem 'VT323', Inconsolata, monospace;
-  text-shadow: 0 0 5px #C8C8C8;
-}
-
-body::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(black, 0.15),
-    rgba(black, 0.15) 1px,
-    transparent 1px,
-    transparent 2px
-  );
+  font: 1.5em 'VT323', Inconsolata, monospace;
+  text-shadow: 0 0 2px #C8C8C8;
 }
 
 ::selection {

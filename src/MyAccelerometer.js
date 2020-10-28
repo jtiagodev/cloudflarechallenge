@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Flex } from "./components/Grid";
-import Text from "./components/Text";
+import Title from "./components/Text";
 import produce from "immer";
 import { Line } from "react-chartjs-2";
 
@@ -29,9 +29,9 @@ const minimalOptions = {
     yAxes: [
       {
         ticks: {
+          display: false,
           min: -10,
           max: 20,
-          stepSize: 1,
         },
       },
     ],
@@ -104,23 +104,26 @@ const MyAccelerometer = (props) => {
     };
 
     const accelReadingHandler = () => {
+      let newX = accel.x;
+      let newY = accel.y;
+      let newZ = accel.z;
       setData(
         produce(data, (draft) => {
           const newDate = new Date();
           draft.labels = draft.labels.concat([newDate]);
           draft.datasets[0].data = draft.datasets[0].data.concat([
-            { t: newDate, y: accel.x },
+            { t: newDate, y: newX },
           ]);
           draft.datasets[1].data = draft.datasets[1].data.concat([
-            { t: newDate, y: accel.y },
+            { t: newDate, y: newY },
           ]);
           draft.datasets[2].data = draft.datasets[2].data.concat([
-            { t: newDate, y: accel.z },
+            { t: newDate, y: newZ },
           ]);
           return draft;
         })
       );
-      setAccelerometer({ x: accel.x, y: accel.y, z: accel.z });
+      setAccelerometer({ x: newX, y: newY, z: newZ });
     };
 
     try {
@@ -150,20 +153,45 @@ const MyAccelerometer = (props) => {
   }, []);
 
   return (
-    <Flex>
-      <Flex column>
-        <Text>Accelerometer</Text>
-        {sensor === "Reading" && (<span>
-          {`Readings: ${accelerometer.x.toFixed(1)} ${accelerometer.y.toFixed(
-            1
-          )} ${accelerometer.z.toFixed(1)}`}
-        </span>)}
+    <Flex
+      style={{
+        boxShadow: "0px 0px 2px 0px #FFFFFF",
+        flex: 3,
+        alignItems: "center",
+        border: "1px solid #24CC44",
+        width: "90vw",
+        minHeight: "10vh",
+        maxHeight: "40vh",
+        padding: "10px",
+      }}
+    >
+      <Flex style={{ flex: 1 }} column>
+        <span style={{ fontWeight: "bold" }}>Accelerometer</span>
+
+        {sensor === "Reading" && (
+          <>
+            <span>
+              <span style={{ color: "red" }}>•</span>
+              {` x: ${accelerometer.x.toFixed(2)}`}
+            </span>
+            <span>
+              <span style={{ color: "green" }}>•</span>
+              {` y: ${accelerometer.y.toFixed(2)}`}
+            </span>
+            <span>
+              <span style={{ color: "blue" }}>•</span>
+              {` z: ${accelerometer.z.toFixed(2)}`}
+            </span>
+          </>
+        )}
       </Flex>
-      {sensor === "Reading" ? (
-        <Line data={data} options={minimalOptions} />
-      ) : (
-        <span>{`ERROR: ${sensor}`}</span>
-      )}
+      <Flex style={{ flex: 2, maxWidth: "60vw" }}>
+        {sensor === "Reading" ? (
+          <Line data={data} options={minimalOptions} />
+        ) : (
+          <span>{`ERROR: ${sensor}`}</span>
+        )}
+      </Flex>
     </Flex>
   );
 };

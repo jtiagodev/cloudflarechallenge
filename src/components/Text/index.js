@@ -1,8 +1,12 @@
 import styled from 'styled-components';
 import React from 'react';
 
-const Text = styled.span`
-    font-family: 'VT323';
+const Title = styled.span`
+font-size: 20px;
 `;
 
-export default Text;
+export const Copyright = styled.span`
+    font-family: 'VT323';
+    font-size: 16px;
+`;
+export default Title;
