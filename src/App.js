@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Flex } from "./components/Grid";
 import {Copyright} from "./components/Text";
 

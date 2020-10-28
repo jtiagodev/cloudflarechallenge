@@ -3,6 +3,7 @@ import { Flex } from "./components/Grid";
 import Title from "./components/Text";
 import produce from "immer";
 import { Line } from "react-chartjs-2";
+import { speak } from './utils/voiceSynthesis';
 
 const minimalOptions = {
   elements: {
@@ -154,6 +155,7 @@ const MyAccelerometer = (props) => {
 
   return (
     <Flex
+      onClick={() => speak(`Accelerometer current status: ${sensor}`)}
       style={{
         boxShadow: "0px 0px 2px 0px #FFFFFF",
         flex: 3,
