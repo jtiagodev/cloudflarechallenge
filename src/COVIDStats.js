@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Flex } from "./components/Grid";
+import { SmallText } from "./components/Text";
 
 const COVIDStats = (prop) => {
   const [data, setData] = useState({ cases: 0 });
@@ -14,20 +15,23 @@ const COVIDStats = (prop) => {
         console.log(result);
         setData(result.data);
       })
-      .catch((err) => console.warr(err));
+      .catch((err) => console.warn(err));
     setLoad(false);
   }, []);
 
   if (load) {
-    return <span>Loading..</span>;
+    return <SmallText>Loading statistics..</SmallText>;
   }
 
   return (
-    <Flex column>
-      <span>Total COVID-19 cases worldwide:</span>
-      <span>{data.cases}</span>
-      <span>Source: NovelCOVID API</span>
+    <>
+    {data.cases !== 0 && (
+    <Flex column style={{ padding: "10px", width: '90vw' }}>
+      <span>{`[COVID-19 STATS] Total: ${data.cases}`}</span>
+      <SmallText>source: NovelCOVID API</SmallText>
     </Flex>
+    )}
+    </>
   );
 };
 

@@ -33,8 +33,8 @@ const minimalOptions = {
         ticks: {
 
           display: false,
-          min: -1,
-          max: 1
+          min: -5,
+          max: 5
         
         },
       },
@@ -45,9 +45,15 @@ const minimalOptions = {
   },
 };
 
-const MyAbsoluteOrientationSensor = (props) => {
+
+const defaultSensorOptions = {
+  referenceFrame: "device",
+  frequency: 3,
+};
+
+const MyGyroscope = (props) => {
   const [status, setStatus] = useState("Starting");
-  const [lastData, setLastData] = useState({ x: 0, y: 0, z: 0, w: 0 });
+  const [lastData, setLastData] = useState({ x: 0, y: 0, z: 0 });
   const [data, setData] = useState({
     labels: [],
     datasets: [
@@ -83,25 +89,11 @@ const MyAbsoluteOrientationSensor = (props) => {
         pointBackgroundColor: "white",
         showLine: true,
         data: [],
-      },
-      {
-        label: "w",
-        backgroundColor: "rgba(0, 0, 0, 0.0)",
-        borderColor: "yellow",
-        borderWidth: 2,
-        pointRadius: 0,
-        lineTension: 0,
-        pointBackgroundColor: "white",
-        showLine: true,
-        data: [],
-      },
+      }
     ],
   });
   const [sensor, setSensor] = useState(
-    new window.AbsoluteOrientationSensor({
-      referenceFrame: "device",
-      frequency: 3,
-    })
+    new window.Gyroscope(defaultSensorOptions)
   );
 
   useEffect(() => {
@@ -118,10 +110,9 @@ const MyAbsoluteOrientationSensor = (props) => {
     };
 
     const sensorReadingHandler = () => {
-      let newX = sensor.quaternion[0];
-      let newY = sensor.quaternion[1];
-      let newZ = sensor.quaternion[2];
-      let newW = sensor.quaternion[3];
+      let newX = sensor.x;
+      let newY = sensor.y;
+      let newZ = sensor.z;
       setData(
         produce(data, (draft) => {
           const newDate = new Date();
@@ -135,13 +126,10 @@ const MyAbsoluteOrientationSensor = (props) => {
           draft.datasets[2].data = draft.datasets[2].data.concat([
             { t: newDate, y: newZ },
           ]);
-          draft.datasets[3].data = draft.datasets[3].data.concat([
-            { t: newDate, y: newW },
-          ]);
           return draft;
         })
       );
-      setLastData({ x: newX, y: newY, z: newZ, w: newW });
+      setLastData({ x: newX, y: newY, z: newZ });
     };
 
     try {
@@ -173,7 +161,7 @@ const MyAbsoluteOrientationSensor = (props) => {
   return (
     <Flex
       onClick={() =>
-        speak(`Absolute Orientation Sensor status: ${status}`)
+        speak(`Gyroscope status: ${status}`)
       }
       style={{
         boxShadow: "0px 0px 2px 0px #FFFFFF",
@@ -187,7 +175,7 @@ const MyAbsoluteOrientationSensor = (props) => {
       }}
     >
       <Flex style={{ flex: 1 }} column>
-        <span style={{ fontWeight: "bold" }}>Absolute Orientation</span>
+        <span style={{ fontWeight: "bold" }}>Gyroscope</span>
 
         {status === "Reading" && (
           <>
@@ -202,10 +190,6 @@ const MyAbsoluteOrientationSensor = (props) => {
             <SmallText>
               <SmallText style={{ color: "blue" }}>•</SmallText>
               {` z: ${lastData.z.toFixed(2)}`}
-            </SmallText>
-            <SmallText>
-              <SmallText style={{ color: "yellow" }}>•</SmallText>
-              {` w: ${lastData.w.toFixed(2)}`}
             </SmallText>
           </>
         )}
@@ -223,4 +207,4 @@ const MyAbsoluteOrientationSensor = (props) => {
   );
 };
 
-export default MyAbsoluteOrientationSensor;
+export default MyGyroscope;

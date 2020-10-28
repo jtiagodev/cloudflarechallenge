@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Flex } from "./components/Grid";
-import Title from "./components/Text";
+import Title, { SmallText} from "./components/Text";
 import produce from "immer";
 import { Line } from "react-chartjs-2";
 import { speak } from './utils/voiceSynthesis';
@@ -172,18 +172,18 @@ const MyAccelerometer = (props) => {
 
         {sensor === "Reading" && (
           <>
-            <span>
-              <span style={{ color: "red" }}>•</span>
+            <SmallText>
+              <SmallText style={{ color: "red" }}>•</SmallText>
               {` x: ${accelerometer.x.toFixed(2)}`}
-            </span>
-            <span>
-              <span style={{ color: "green" }}>•</span>
+            </SmallText>
+            <SmallText>
+              <SmallText style={{ color: "green" }}>•</SmallText>
               {` y: ${accelerometer.y.toFixed(2)}`}
-            </span>
-            <span>
-              <span style={{ color: "blue" }}>•</span>
+            </SmallText>
+            <SmallText>
+              <SmallText style={{ color: "blue" }}>•</SmallText>
               {` z: ${accelerometer.z.toFixed(2)}`}
-            </span>
+            </SmallText>
           </>
         )}
       </Flex>
@@ -191,7 +191,7 @@ const MyAccelerometer = (props) => {
         {sensor === "Reading" ? (
           <Line data={data} options={minimalOptions} />
         ) : (
-          <span>{`ERROR: ${sensor}`}</span>
+          <SmallText style={{ color: 'red' }}>{`ERROR: ${sensor}`}</SmallText>
         )}
       </Flex>
     </Flex>

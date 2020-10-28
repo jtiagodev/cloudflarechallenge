@@ -1,20 +1,25 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Flex } from "./components/Grid";
-import {Copyright} from "./components/Text";
-
+import COVIDStats from "./COVIDStats";
+import Footer from "./Footer";
+import MyAbsoluteOrientationSensor from "./MyAbsoluteOrientationSensor";
 import MyAccelerometer from "./MyAccelerometer";
+import MyAmbientLightSensor from "./MyAmbientLightSensor";
+import MyGyroscope from "./MyGyroscope";
+import Status from "./Status";
+
 
 const App = (props) => {
 
   return (
           <Flex style={{ alignItems: 'center', justifyContent: 'center' }} column>
+            <COVIDStats />
+            <Status />
+            <MyAbsoluteOrientationSensor />
             <MyAccelerometer />
-            <MyAccelerometer />
-            <MyAccelerometer />
-            <MyAccelerometer />
-
-            <Flex style={{ alignSelf: 'flex-end', margin: '10px' }}><Copyright>{`powered by {} Cloudflare Worker™`}</Copyright></Flex>
-  
+            <MyAmbientLightSensor />
+            <MyGyroscope />
+            <Footer />
           </Flex>
   );
 };
