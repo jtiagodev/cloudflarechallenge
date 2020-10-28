@@ -49,6 +49,9 @@ const defaultSensorOptions = {
 };
 
 const MyAmbientLightSensor = (props) => {
+  const { setStatusData } = props;
+
+
   const [status, setStatus] = useState("Starting");
   const [lastData, setLastData] = useState({ illuminance: 0 });
   const [data, setData] = useState({
@@ -86,6 +89,11 @@ const MyAmbientLightSensor = (props) => {
       } else {
         setStatus("Sensor Generic Error: " + event.error.name);
       }
+      setStatusData(prevData => produce(prevData, (draft) => {
+        draft[0] = draft[0] - 1;
+        draft[1] = draft[1] + 1;
+        return draft;
+      }));
     };
 
     const sensorReadingHandler = () => {
@@ -109,8 +117,18 @@ const MyAmbientLightSensor = (props) => {
         sensor.onreading = () => sensorErrorHandler();
         sensor.start();
         setStatus("Reading");
+        setStatusData(prevData => produce(prevData, (draft) => {
+          draft[0] = draft[0] + 1;
+          draft[2] = draft[2] - 1;
+          return draft;
+        }));
       } else {
         setStatus("Sensor Unavailable");
+        setStatusData(prevData => produce(prevData, (draft) => {
+          draft[1] = draft[1] + 1;
+          draft[2] = draft[2] - 1;
+          return draft;
+        }));
       }
     } catch (error) {
       setSensor("Sensor Catch Error");
@@ -134,7 +152,7 @@ const MyAmbientLightSensor = (props) => {
       }}
     >
       <Flex style={{ flex: 1 }} column>
-        <span style={{ fontWeight: "bold" }}>Ambient Light</span>
+        <span>Ambient Light</span>
 
         {status === "Reading" && (
           <>

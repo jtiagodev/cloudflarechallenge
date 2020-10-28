@@ -46,6 +46,8 @@ const minimalOptions = {
 };
 
 const MyAbsoluteOrientationSensor = (props) => {
+  const { setStatusData } = props;
+
   const [status, setStatus] = useState("Starting");
   const [lastData, setLastData] = useState({ x: 0, y: 0, z: 0, w: 0 });
   const [data, setData] = useState({
@@ -115,6 +117,11 @@ const MyAbsoluteOrientationSensor = (props) => {
       } else {
         setStatus("Sensor Generic Error");
       }
+      setStatusData(prevData => produce(prevData, (draft) => {
+        draft[0] = draft[0] - 1;
+        draft[1] = draft[1] + 1;
+        return draft;
+      }));
     };
 
     const sensorReadingHandler = () => {
@@ -149,6 +156,11 @@ const MyAbsoluteOrientationSensor = (props) => {
       sensor.addEventListener("reading", sensorReadingHandler);
       sensor.start();
       setStatus("Reading");
+      setStatusData(prevData => produce(prevData, (draft) => {
+        draft[0] = draft[0] + 1;
+        draft[2] = draft[2] - 1;
+        return draft;
+      }));
     } catch (error) {
       // Handle construction errors.
       if (error.name === "SecurityError") {
@@ -187,7 +199,7 @@ const MyAbsoluteOrientationSensor = (props) => {
       }}
     >
       <Flex style={{ flex: 1 }} column>
-        <span style={{ fontWeight: "bold" }}>Absolute Orientation</span>
+        <span>Absolute Orientation</span>
 
         {status === "Reading" && (
           <>

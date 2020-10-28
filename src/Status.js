@@ -27,21 +27,23 @@ const minimalOptions = {
 };
 
 const Status = (props) => {
-  const { statusData = [1, 4] } = props;
+  const { statusData } = props;
 
   const [data, setData] = useState({
-    labels: ['GOOD', 'BAD'],
+    labels: ['GOOD', 'BAD', 'UNKNOWN'],
     datasets: [
         {
           label: 'System Status',
           data: statusData,
           backgroundColor: [
             'rgba(0, 255, 0, 0.3)',
-            'rgba(255, 0, 0, 0.6)',
+            'rgba(255, 0, 0, 0.3)',
+            'rgba(255, 255, 255, 0.3)',
           ],
           borderColor: [
             'rgba(0, 255, 0, 0.6)',
             'rgba(255, 0, 0, 0.6)',
+            'rgba(255, 255, 255, 0.6)',
           ],
           borderWidth: 1,
         },
@@ -64,7 +66,7 @@ const Status = (props) => {
       }}
     >
       <Flex style={{ flex: 1 }} column>
-        <span style={{ fontWeight: "bold" }}>System Status</span>
+        <span>System Status</span>
 
           <>
             <SmallText>
@@ -73,7 +75,11 @@ const Status = (props) => {
             </SmallText>
             <SmallText>
               <SmallText style={{ color: "red" }}>•</SmallText>
-              {` NOK: ${statusData[0]}`}
+              {` NOK: ${statusData[1]}`}
+            </SmallText>
+            <SmallText>
+              <SmallText style={{ color: "gray" }}>•</SmallText>
+              {` UNKNOWN: ${statusData[2]}`}
             </SmallText>
           </>
       

@@ -43,6 +43,9 @@ const minimalOptions = {
 };
 
 const MyAccelerometer = (props) => {
+  const { setStatusData } = props;
+
+
   const [sensor, setSensor] = useState("Starting");
   const [accelerometer, setAccelerometer] = useState({ x: 0, y: 0, z: 0 });
   const [data, setData] = useState({
@@ -102,6 +105,12 @@ const MyAccelerometer = (props) => {
       } else {
         setSensor("Sensor Generic Error");
       }
+      setStatusData(prevData => produce(prevData, (draft) => {
+        draft[0] = draft[0] - 1;
+        draft[1] = draft[1] + 1;
+        // draft[2] = draft[2] - 1;
+        return draft;
+      }));
     };
 
     const accelReadingHandler = () => {
@@ -132,6 +141,12 @@ const MyAccelerometer = (props) => {
       accel.addEventListener("reading", accelReadingHandler);
       accel.start();
       setSensor("Reading");
+      setStatusData(prevData => produce(prevData, (draft) => {
+        draft[0] = draft[0] + 1;
+        // draft[1] = draft[1] - 1;
+        draft[2] = draft[2] - 1;
+        return draft;
+      }));
     } catch (error) {
       // Handle construction errors.
       if (error.name === "SecurityError") {
@@ -168,7 +183,7 @@ const MyAccelerometer = (props) => {
       }}
     >
       <Flex style={{ flex: 1 }} column>
-        <span style={{ fontWeight: "bold" }}>Accelerometer</span>
+        <span>Accelerometer</span>
 
         {sensor === "Reading" && (
           <>
