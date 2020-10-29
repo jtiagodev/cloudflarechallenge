@@ -11,7 +11,7 @@ import Status from "./Status";
 
 const App = (props) => {
   // pos0: good, pos1: bad, pos2: unknown
-  const [statusData, setStatusData] = useState([0,0,4]);
+  const [statusData, setStatusData] = useState([0,0,3]);
 
   return (
           <Flex style={{ alignItems: 'center', justifyContent: 'center' }} column>
@@ -19,7 +19,7 @@ const App = (props) => {
             <Status statusData={statusData} />
             <MyAbsoluteOrientationSensor setStatusData={setStatusData} />
             <MyAccelerometer setStatusData={setStatusData} />
-            <MyAmbientLightSensor setStatusData={setStatusData} />
+            {/* <MyAmbientLightSensor setStatusData={setStatusData} /> */}
             <MyGyroscope setStatusData={setStatusData} />
             <Footer />
           </Flex>
