@@ -8,6 +8,11 @@ npm run build
 wrangler publish
 ```
 
+## Live Demo
+
+http://sensorscheck.jtiagodev.workers.dev/
+Developed for mobile devices with Google Chrome
+
 ## (few) Technical Considerations
 
 Application Root (App) manages the sensors state array.
